@@ -16,6 +16,7 @@ Other than the extra val parameter used in  calling  balances and the transfer f
 
 This is done in the following line of code:
 uint interest=((uint(totalInterestAdded)-val)*amount)/inCirculation
+
 where totalInterestAdded is the total amount of interest added to the Casper Deposit Contract
 amount is the number of coins owned by the user being redeemed
 Incirculation is the total number of coins currently in circulation.
