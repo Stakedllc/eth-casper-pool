@@ -16,7 +16,7 @@ You deposit ETH to our staking pool calling the deposit function in the Casper D
 deposit( address withdrawal_addr) payable{
 ```
 
-In the deposit function you define the Withdrawal address by  withdrawal_addr parameter   where the contract proceeds will be deposited. The Ether you are depositing must also be sent with the function call as a message value.   
+In the deposit function you define the Withdrawal address by  withdrawal_addr parameter   where the contract proceeds will be deposited. The Ether you are depositing must also be sent with the function call as a message value.The payable parameter denotes the ability for the function to receive ether.   
 
 
 
@@ -48,9 +48,15 @@ The interestAtDepositTime parameter is just interest earned by the pool before y
   amount is the number of coins you own
   totalCoins is the totalSupply of coins
 
-Balances are stored in the balances mapping. A users total coin balance can be returned by calling totalBalance(address user) function.
-A user can get the balance of a specific deposit date by calling balanceOf(address _owner,uint interestAtDepositTime)
+Balances are stored in the balances mapping. A users total coin balance can be returned by calling the following function:
+  ```solidity
+ totalBalance(address user)
+  ```
 
+A user can get the balance of a specific deposit date by calling balanceOf(address _owner,uint interestAtDepositTime)
+  ```solidity
+ balanceOf(address _owner,uint interestAtDepositTime)
+  ```
 SCT follows the ERC20 standard, except for interestAtDepositTime parameter used in calling  balances and the transfer function SCT follow the ERC20 standard.
  
 
