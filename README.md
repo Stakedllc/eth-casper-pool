@@ -25,35 +25,38 @@ The pool deposits the accumulated ETH from all pool members and deposits it in t
 
 
 ### Withdrawing from a pool
-You Withdraw ETH from the staking pool by submitting a withdrawal request and calling the withdraw function:  
+You Withdraw ETH from the staking pool by submitting a withdrawal request and calling the withdraw function  
 
  
 Casper imposes a four month delay on withdrawals. This is to prevent long-range attacks from dishonest validators. Since Staked is an honest validator, we are not concerned about this risk. This allows us to offer the Staked Casper Tokens described below that will allow you to avoid the withdrawal delay by selling your ownership to another investor.
  
 # Staked Casper Tokens 
-Staked Casper Tokens ("SCT") are an extension of staking pools with an added feature: the ability to buy or sell your interest at any time. So rather than withdrawing from the Casper contract, you can simply sell your proportional shares in the Staking Pool to another ETH-holder and avoid the four month withdrawal delay. 
+Staked Casper Tokens ("SCT") are an extension of staking pools with an added feature: the ability to buy or sell your interest at any time. So rather than withdrawing from the Casper contract, you can simply sell your proportional shares in the Staking Pool to another ETH-holder represented as tokens and avoid the four month withdrawal delay. 
 
-SCT represent proportional ownership in a Casper staking pool run by Staked. You can purchase SCT at any time by by calling the function deposit() in the Casper Deposit contract to the contract. This adds new tokens to the circulation and deposits your ETH into the Casper contract.
+SCT represent proportional ownership in a Casper staking pool run by Staked. You can purchase SCT at any time by by calling the deposit function in the same way as the regular pool contract explained. This sets your withdrawal address , credits tokens to your account, and sends your ether to the contract. 
  
 After your ETH has been deposited to the Casper contract, the SCT tokens are eligible to earn interest. You will earn interest equal to your proportional ownership of the total number of SCT tokens that can be purchased (e.g. If you own 10% of the total tokens, you will be entitled to 10% of the earned interest).  
 
 We keep track of the interest you have earned by marking tokens with a parameter called interestAtDepositTime. This allows us to track the interest owed to each depositor - you are only entitled to the interest generated since you deposited your ETH to the contract. 
 
 
-The interestAtDepositTime parameter is just interest earned by the pool before your tokens were deposited. You're entitled to the interest that has accumulated since that time. This amount is calculated by subtracting interestAtDepositTime from the total interest deposited to the contract at the time you withdraw.Your total interest payout when withdrawing is calculated in the following code:
+The interestAtDepositTime parameter is simply the total amount of interest earned by the pool before your tokens were deposited.Batches of coins bought at different times will all be marked with different a interestAtDepositTime parameter.
+This essentially splits the coins into different classes based on the time of purchase.
+
+You're entitled to the interest that has accumulated since that time. This amount is calculated by subtracting interestAtDepositTime from the total interest deposited to the contract at the time you withdraw.Your total interest payout when withdrawing is calculated in the following code:
   ```solidity
   uint interest=((uint(totalInterestAdded)-interestAtDepositTime)*amount)/(TotalCoins) ;
   ```
-  totalInterestAdded is the total interest send to the Casper Deposit contract 
-  amount is the number of coins you own
-  totalCoins is the totalSupply of coins
+  Where totalInterestAdded is the total interest sent to the Casper Deposit contract, 
+  amount is the number of coins you own,
+  and totalCoins is the totalSupply of coins.
 
-Balances are stored in the balances mapping. A users total coin balance can be returned by calling the following function:
+Balances are stored a balances mapping.Your total coin balance can be returned by calling the following function:
   ```solidity
  totalBalance(address user)
   ```
 
-A user can get the balance of a specific deposit date by calling balanceOf(address _owner,uint interestAtDepositTime)
+You can get the balance of a your coins bought at a specific deposit date by calling 
   ```solidity
  balanceOf(address _owner,uint interestAtDepositTime)
   ```
@@ -61,5 +64,12 @@ SCT follows the ERC20 standard, except for interestAtDepositTime parameter used 
  
 
 SCT can be transferred between users, allowing the SCT to continue to accumulating interest until they are withdrawn from the Casper Deposit contract. Withdrawal requests will remove the SCT from the circulatingTokenSupply and initiate a withdrawal request in the Casper contract.
-This is done in the function withdraw(uint interestAtDepositTime)  which takes the coin type that will be redeemed and only works for that coin type.Users with multiple coin types will need to call the withdraw function for each type. By default deposited ether will be sent to the coin holders address. A different withdrawal address can be set for any coinholder with the function setWithDrawAddress(address to). The deposit function  only way SCT can be added to the circulating supply. Withdrawal is the only way SCT can be removed from the circulating supply. 
+
+To withdraw you call the following function
+  ```solidity
+withdraw(uint interestAtDepositTime) 
+  ```
+which withdraws all coins marked by a given interestDepositTime that you own. 
+
+By default deposited ether will be sent to the coin holders address. A different withdrawal address can be set for any coinholder with the function setWithDrawAddress(address to). The deposit function  only way SCT can be added to the circulating supply. Withdrawal is the only way SCT can be removed from the circulating supply. 
 
