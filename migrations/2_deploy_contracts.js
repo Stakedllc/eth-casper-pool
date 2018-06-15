@@ -1,9 +1,15 @@
-var Deposit=artifacts.require('./CasperDeposit.sol');
-
-
-
+var StakeToken = artifacts.require('./StakeToken.sol');
+var Math= artifacts.require('./SafeMath.sol')
+var AddressUtils=artifacts.require('./AddressUtils.sol')
+var Casper=artifacts.require('./CasperDeposit.sol')
 module.exports = function(deployer) {
-
-deployer.deploy(Deposit,5,0,"0x5aeda56215b167893e80b4fe645ba6d5bab767de",9500);
-
+  deployer.then(async () => {
+await deployer.deploy(Math)
+await deployer.deploy(AddressUtils)
+await deployer.link(AddressUtils,StakeToken)
+await deployer.link(Math,StakeToken)
+let H=await deployer.deploy(StakeToken,"StakeToken","ST");
+H=H.address;
+await deployer.deploy(Casper,0,0,web3.eth.accounts[0],500,H)
+});
 }
