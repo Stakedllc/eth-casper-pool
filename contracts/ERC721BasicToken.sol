@@ -63,9 +63,9 @@ contract ERC721BasicToken is ERC721Basic {
    * @param _tokenId uint256 ID of the token to query the owner of
    * @return owner address currently marked as the owner of the given token ID
    */
-  function ownerOf(uint256 _tokenId) public view returns (address) {
+  function ownerOf(uint256 _tokenId) public  returns (address) {
     address owner = tokenOwner[_tokenId];
-    require(owner != address(0));
+    //require(owner != address(0));
     return owner;
   }
 
@@ -74,7 +74,7 @@ contract ERC721BasicToken is ERC721Basic {
    * @param _tokenId uint256 ID of the token to query the existence of
    * @return whether the token exists
    */
-  function exists(uint256 _tokenId) public view returns (bool) {
+  function exists(uint256 _tokenId) public  returns (bool) {
     address owner = tokenOwner[_tokenId];
     return owner != address(0);
   }
